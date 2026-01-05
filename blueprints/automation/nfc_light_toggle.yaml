@@ -1,22 +1,23 @@
 blueprint:
-  name: NFC Light Toggle mit Farbe, Transition & Log
-  description: Schaltet ein Licht per NFC ein/aus mit Helligkeit, Farbe, Transition und Logbucheintrag
+  name: NFC Light Toggle with Color, Transition & Log
+  description: Toggle a light via NFC tag with brightness, color, transition and logbook entry
   domain: automation
 
   input:
-    nfc_tag:
-      name: NFC Tag
+    nfc_tag_id:
+      name: NFC Tag ID
+      description: The NFC tag ID (e.g. d5a62d83-98a2-4af4-b63d-8385f81aa628)
       selector:
-        tag: {}
+        text: {}
 
     light_entity:
-      name: Lampe
+      name: Light
       selector:
         entity:
           domain: light
 
     brightness:
-      name: Helligkeit (%)
+      name: Brightness (%)
       default: 100
       selector:
         number:
@@ -25,7 +26,7 @@ blueprint:
           unit_of_measurement: "%"
 
     transition:
-      name: Transition (Sekunden)
+      name: Transition (seconds)
       default: 2
       selector:
         number:
@@ -34,75 +35,16 @@ blueprint:
           unit_of_measurement: "s"
 
     rgb_color:
-      name: RGB Farbe (optional)
+      name: RGB Color (optional)
       default: []
       selector:
         color_rgb: {}
 
     color_temp:
-      name: Farbtemperatur (Kelvin, optional)
+      name: Color temperature (Kelvin, optional)
       default: 0
       selector:
         number:
           min: 2000
           max: 6500
-          unit_of_measurement: "K"
-
-trigger:
-  - platform: tag
-    tag_id: !input nfc_tag
-
-variables:
-  user: "{{ trigger.context.user_id }}"
-  user_name: >
-    {{ (states.person
-        | selectattr('attributes.user_id','defined')
-        | selectattr('attributes.user_id','eq', trigger.context.user_id)
-        | map(attribute='name')
-        | list
-        | first) | default('Unbekannt') }}
-
-action:
-  - choose:
-      # LICHT IST AN → AUS
-      - conditions:
-          - condition: state
-            entity_id: !input light_entity
-            state: "on"
-        sequence:
-          - service: light.turn_off
-            target:
-              entity_id: !input light_entity
-            data:
-              transition: !input transition
-
-          - service: logbook.log
-            data:
-              name: NFC Licht
-              message: "{{ user_name }} hat {{ !input light_entity }} AUS geschaltet (NFC)"
-              entity_id: !input light_entity
-
-    # LICHT IST AUS → EIN
-    default:
-      - service: light.turn_on
-        target:
-          entity_id: !input light_entity
-        data:
-          brightness_pct: !input brightness
-          transition: !input transition
-          rgb_color: >
-            {% if !input rgb_color != [] %}
-              {{ !input rgb_color }}
-            {% endif %}
-          kelvin: >
-            {% if !input color_temp | int > 0 %}
-              {{ !input color_temp }}
-            {% endif %}
-
-      - service: logbook.log
-        data:
-          name: NFC Licht
-          message: "{{ user_name }} hat {{ !input light_entity }} EIN geschaltet (NFC)"
-          entity_id: !input light_entity
-
-mode: single
+          un
