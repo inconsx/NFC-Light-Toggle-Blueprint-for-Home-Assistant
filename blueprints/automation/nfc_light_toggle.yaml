@@ -47,4 +47,62 @@ blueprint:
         number:
           min: 2000
           max: 6500
-          un
+          unit_of_measurement: "K"
+
+trigger:
+  - platform: tag
+    tag_id: !input nfc_tag_id
+
+variables:
+  user_name: >
+    {{ (states.person
+        | selectattr('attributes.user_id','defined')
+        | selectattr('attributes.user_id','eq', trigger.context.user_id)
+        | map(attribute='name')
+        | list
+        | first) | default('Unknown') }}
+
+action:
+  - choose:
+      # LIGHT IS ON → TURN OFF
+      - conditions:
+          - condition: state
+            entity_id: !input light_entity
+            state: "on"
+        sequence:
+          - service: light.turn_off
+            target:
+              entity_id: !input light_entity
+            data:
+              transition: !input transition
+
+          - service: logbook.log
+            data:
+              name: NFC Light
+              message: "{{ user_name }} turned {{ !input light_entity }} OFF (NFC)"
+              entity_id: !input light_entity
+
+    # LIGHT IS OFF → TURN ON
+    default:
+      - service: light.turn_on
+        target:
+          entity_id: !input light_entity
+        data:
+          brightness_pct: !input brightness
+          transition: !input transition
+          rgb_color: >
+            {% if !input rgb_color != [] %}
+              {{ !input rgb_color }}
+            {% endif %}
+          kelvin: >
+            {% if !input color_temp | int > 0 %}
+              {{ !input color_temp }}
+            {% endif %}
+
+      - service: logbook.log
+        data:
+          name: NFC Light
+          message: "{{ user_name }} turned {{ !input light_entity }} ON (NFC)"
+          entity_id: !input light_entity
+
+mode: single
