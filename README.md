@@ -1,182 +1,161 @@
-NFC Light Toggle Blueprint for Home Assistant
+# NFC Light Toggle Blueprint for Home Assistant
 
 A flexible Home Assistant blueprint that allows you to toggle lights using NFC tags, including support for brightness, color, smooth transitions, and logbook entries.
 
 Perfect for multi-user households and for use with the Home Assistant Companion App on iOS and Android.
 
-✨ Features
+---
 
-📱 NFC tag as trigger
+## Features
 
-🔁 Toggle functionality (On / Off)
+- NFC tag as trigger  
+- Toggle functionality (On / Off)  
+- Configurable brightness (%)  
+- Optional color  
+  - RGB  
+  - or Color temperature (Kelvin)  
+- Smooth transition when turning lights on or off  
+- Logbook entries  
+  - Which user triggered the action  
+  - Which light was controlled  
+  - On / Off state  
+- Reusable blueprint  
+- No duplicated automations required  
 
-💡 Configurable brightness (%)
+---
 
-🎨 Optional color
+## Requirements
 
-RGB or
+- Home Assistant 2022.8 or newer  
+- Home Assistant Companion App (iOS or Android)  
+- NFC-capable smartphone  
+- An NFC tag registered in Home Assistant  
+- One or more light entities  
 
-Color temperature (Kelvin)
+---
 
-🌈 Smooth transition when turning lights on or off
+## Installation
 
-📊 Logbook entries
+### Import the Blueprint
 
-Which user triggered the action
+1. Go to Settings → Automations & Scenes → Blueprints  
+2. Click Import Blueprint  
+3. Paste the YAML code from this repository  
+4. Save  
 
-Which light was controlled
+---
 
-On / Off state
-
-♻️ Reusable blueprint
-
-🧩 No duplicated automations required
-
-🔧 Requirements
-
-Home Assistant 2022.8 or newer
-
-Home Assistant Companion App
-
-iOS or Android
-
-NFC-capable smartphone
-
-An NFC tag registered in Home Assistant
-
-One or more light entities
-
-📦 Installation
-1️⃣ Import the Blueprint
-
-Go to Settings → Automations & Scenes → Blueprints
-
-Click Import Blueprint
-
-Paste the YAML code from this repository
-
-Save
-
-⚙️ Usage
+## Usage
 
 After importing the blueprint:
 
-Create a new automation from the blueprint
+1. Create a new automation from the blueprint  
+2. Configure the following options:  
+   - NFC tag  
+   - Light entity  
+   - Brightness (%)  
+   - Transition duration (seconds)  
+   - Optional:  
+     - RGB color  
+     - or Color temperature (Kelvin)  
 
-Configure the following options:
+The NFC tag will now reliably toggle the selected light.
 
-NFC tag
+---
 
-Light entity
+## Logic Overview
 
-Brightness (%)
+### Light is OFF
 
-Transition duration (seconds)
+- Turn on with:
+  - defined brightness
+  - optional color
+  - smooth transition
 
-Optional:
+Logbook entry example:
 
-RGB color
 
-or Color temperature (Kelvin)
+### Light is ON
 
-➡️ The NFC tag will now reliably toggle the selected light.
+- Turn off with transition
 
-🧠 Logic Overview
-Light is OFF
+Logbook entry example:
 
-Turn on with:
 
-defined brightness
+---
 
-optional color
-
-smooth transition
-
-Logbook entry:
-
-[User] turned [Light] ON (NFC)
-
-Light is ON
-
-Turn off with transition
-
-Logbook entry:
-
-[User] turned [Light] OFF (NFC)
-
-📊 Logbook
+## Logbook
 
 All actions are recorded in the Home Assistant logbook:
 
-User name (via trigger.context.user_id)
-
-Light entity
-
-Action (ON / OFF)
-
-Trigger source: NFC
+- User name (via trigger.context.user_id)  
+- Light entity  
+- Action (ON / OFF)  
+- Trigger source: NFC  
 
 Ideal for:
+- Multi-user environments  
+- Auditing and traceability  
+- Debugging  
 
-Multi-user environments
+---
 
-Auditing & traceability
-
-Debugging
-
-🍎 iOS Notes
+## iOS Notes
 
 Due to iOS system restrictions:
 
-📱 The iPhone must be unlocked
-(Face ID / Touch ID is sufficient)
+- The iPhone must be unlocked (Face ID / Touch ID is sufficient)  
+- No additional confirmation is required  
+- iOS briefly shows a system banner (“NFC tag detected”)  
+- NFC scans are not possible while the device is locked  
 
-✅ No additional confirmation is required
+These limitations are enforced by iOS and cannot be bypassed by Home Assistant.
 
-ℹ️ iOS briefly shows a system banner (“NFC tag detected”)
+---
 
-🚫 NFC scans are not possible while the device is locked
+## Android Notes
 
-➡️ These limitations are enforced by iOS and cannot be bypassed by Home Assistant.
+- NFC scans may work without unlocking (device-dependent)  
+- In many cases, no confirmation dialog  
+- Very fast trigger response  
 
-🤖 Android Notes
+---
 
-NFC scans may work without unlocking (device-dependent)
-
-In many cases, no confirmation dialog
-
-Very fast trigger response
-
-🛡️ Security
+## Security
 
 The blueprint supports:
 
-User identification via trigger.context.user_id
+- User identification via trigger.context.user_id  
+- Person mapping in Home Assistant  
 
-Person mapping in Home Assistant
+Automations can be extended to allow only specific users or devices.
 
-➡️ Automations can be extended to allow only specific users or devices.
+---
 
-🧩 Possible Extensions
+## Possible Extensions
 
 The blueprint can easily be extended with:
 
-🔒 User whitelist
+- User whitelist  
+- Day/Night brightness or color  
+- Multiple lights per tag  
+- Per-user statistics or counters  
+- Notifications  
 
-🌗 Day/Night brightness or color
+---
 
-🛏️ Multiple lights per tag
+## Contributing
 
-📈 Per-user statistics or counters
-
-🔔 Notifications
-
-🤝 Contributing
-
-Contributions, ideas, and pull requests are welcome.
+Contributions, ideas, and pull requests are welcome.  
 Please describe changes clearly and concisely.
 
-📄 License
+---
 
-MIT License
+## License
+
+MIT License  
 Free to use, modify, and distribute.
+
+---
+
+Enjoy automating!
